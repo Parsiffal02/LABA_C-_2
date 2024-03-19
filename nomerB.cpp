@@ -1,39 +1,45 @@
 #include <iostream>
-#include <vector>
-#include <string>
+#include <queue>
+
+using namespace std;
 
 int main() {
-    std::vector<std::string> class9, class10, class11;
-    int grade;
-    std::string surname;
+    queue<int> firstPlayer, secondPlayer;
+    for (int i = 0; i < 5; ++i) {
+        int card;
+        cin >> card;
+        firstPlayer.push(card);
+    }
+    for (int i = 0; i < 5; ++i) {
+        int card;
+        cin >> card;
+        secondPlayer.push(card);
+    }
 
-    // Чтение данных
-    while (std::cin >> grade >> surname) {
-        switch (grade) {
-            case 9:
-                class9.push_back(surname);
-                break;
-            case 10:
-                class10.push_back(surname);
-                break;
-            case 11:
-                class11.push_back(surname);
-                break;
-            default:
-                // Некорректный номер класса, можно добавить обработку ошибки
-                break;
+    int moves = 0;
+    while (!firstPlayer.empty() && !secondPlayer.empty() && moves < 1000000) {
+        int cardFirst = firstPlayer.front();
+        firstPlayer.pop();
+        int cardSecond = secondPlayer.front();
+        secondPlayer.pop();
+
+        if ((cardFirst > cardSecond && !(cardFirst == 9 && cardSecond == 0)) || (cardFirst == 0 && cardSecond == 9)) {
+            firstPlayer.push(cardFirst);
+            firstPlayer.push(cardSecond);
+        } else {
+            secondPlayer.push(cardFirst);
+            secondPlayer.push(cardSecond);
         }
+
+        ++moves;
     }
 
-    // Вывод результатов
-    for (const auto& name : class9) {
-        std::cout << "9 " << name << std::endl;
-    }
-    for (const auto& name : class10) {
-        std::cout << "10 " << name << std::endl;
-    }
-    for (const auto& name : class11) {
-        std::cout << "11 " << name << std::endl;
+    if (moves >= 1000000) {
+        cout << "botva" << endl;
+    } else if (firstPlayer.empty()) {
+        cout << "second " << moves << endl;
+    } else {
+        cout << "first " << moves << endl;
     }
 
     return 0;
